@@ -164,3 +164,28 @@ button{
 .more-options-visible {
     display: block;
 }
+
+.reply-btn {
+    width: 40%;
+}
+
+.reply-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.reply-input-area {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 10px;
+}
+
+.reply-input {
+    margin-bottom: 5px;
+}
+
+.reply-btn {
+    margin-left: auto;
+    font-size: 16px;
+}

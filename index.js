@@ -16,6 +16,9 @@ document.addEventListener('click', function(e){
     else if(e.target.id === 'tweet-btn'){
         handleTweetBtnClick()
     }
+    else if(e.target.dataset.replyBtn){
+        handleReplyBtnClick(e.target.dataset.replyBtn)
+    }
     else if(e.target.dataset.options) {
 
         const visiblePopups = document.querySelectorAll('.more-options-visible');
@@ -60,7 +63,9 @@ function handleRetweetClick(tweetId){
         targetTweetObj.retweets++
     }
     targetTweetObj.isRetweeted = !targetTweetObj.isRetweeted
+
     render() 
+
 }
 
 function handleReplyClick(replyId){
@@ -84,6 +89,25 @@ function handleTweetBtnClick(){
         })
     render()
     tweetInput.value = ''
+    }
+
+}
+
+function handleReplyBtnClick(tweetId){
+    const replyInput = document.getElementById(`reply-input-${tweetId}`)
+    const targetTweetObj = tweetsData.filter(function(tweet){
+        return tweet.uuid === tweetId
+    })[0]
+
+    if(replyInput.value){
+        targetTweetObj.replies.unshift({
+            handle: loggedInUserHandle,
+            profilePic: `images/scrimbalogo.png`,
+            tweetText: replyInput.value
+        })
+        render()
+        replyInput.value = ''
+        document.getElementById(`replies-${tweetId}`).classList.toggle('hidden')
     }
 
 }
@@ -129,7 +153,7 @@ function getFeedHtml(){
 `
             })
         }
-        
+        // console.log(repliesHtml)
           
         feedHtml += `
 <div class="tweet">
@@ -169,7 +193,14 @@ function getFeedHtml(){
         </div>            
     </div>
     <div class="hidden" id="replies-${tweet.uuid}">
-        ${repliesHtml}
+        <div class="reply-container">
+            <div class="reply-input-area">
+                <img src="images/scrimbalogo.png" class="profile-pic">
+                <textarea class="reply-input" placeholder="Post your reply" id="reply-input-${tweet.uuid}"></textarea>
+            </div>
+            <button class="reply-btn" data-reply-btn="${tweet.uuid}">Reply</button>        
+            ${repliesHtml}
+        </div>
     </div>   
 </div>
 `
