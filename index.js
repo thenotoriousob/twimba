@@ -1,7 +1,16 @@
-import { tweetsData } from './data.js'
+import { fileTweetsData } from './data.js'
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
 const loggedInUserHandle = "@Scrimba";
+const tweetsFromLocalStorage = JSON.parse( localStorage.getItem("tweets"));
+
+let tweetsData = fileTweetsData;
+
+if (tweetsFromLocalStorage) {
+    tweetsData = tweetsFromLocalStorage;
+}
+
+console.log(tweetsData)
 
 document.addEventListener('click', function(e){
     if(e.target.dataset.like){
@@ -41,12 +50,8 @@ function handleLikeClick(tweetId){
         return tweet.uuid === tweetId
     })[0]
 
-    if (targetTweetObj.isLiked){
-        targetTweetObj.likes--
-    }
-    else{
-        targetTweetObj.likes++ 
-    }
+    targetTweetObj.isLiked ? targetTweetObj.likes-- : targetTweetObj.likes++
+
     targetTweetObj.isLiked = !targetTweetObj.isLiked
     render()
 }
@@ -56,12 +61,8 @@ function handleRetweetClick(tweetId){
         return tweet.uuid === tweetId
     })[0]
     
-    if(targetTweetObj.isRetweeted){
-        targetTweetObj.retweets--
-    }
-    else{
-        targetTweetObj.retweets++
-    }
+    targetTweetObj.isRetweeted ? targetTweetObj.retweets-- : targetTweetObj.retweets++
+
     targetTweetObj.isRetweeted = !targetTweetObj.isRetweeted
 
     render() 
@@ -153,7 +154,6 @@ function getFeedHtml(){
 `
             })
         }
-        // console.log(repliesHtml)
           
         feedHtml += `
 <div class="tweet">
@@ -205,7 +205,10 @@ function getFeedHtml(){
 </div>
 `
    })
-   return feedHtml 
+
+    localStorage.setItem("tweets", JSON.stringify(tweetsData));
+
+    return feedHtml 
 }
 
 function render(){
